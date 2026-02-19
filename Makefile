@@ -96,11 +96,15 @@ test-all:
 .PHONY: modules
 modules: ## Runs go mod to ensure modules are up to date.
 	go mod tidy
-	cd pkg/applyconfiguration/testdata/cronjob; go mod tidy
+	@set -e; for mod in $(shell find . -path ./hack -prune -o -name go.mod -not -path ./go.mod -print); do \
+		dir=$$(dirname $$mod); \
+		echo "go mod tidy in $${dir}"; \
+		(cd $${dir} && go mod tidy); \
+	done
 
 .PHONY: verify-modules
 verify-modules: modules ## Verify go modules are up to date
-	@if !(git diff --quiet HEAD -- go.sum go.mod); then \
+	@if !(git diff --quiet HEAD); then \
 		git diff; \
 		echo "go module files are out of date, please run 'make modules'"; exit 1; \
 	fi
