@@ -134,5 +134,5 @@ for dir in $(find . -name go.mod -exec dirname {} \;); do
   if [[ "$dir" == "./pkg/deepcopy/testdata" ]]; then continue; fi
 
   echo "Testing module in $dir"
-  (cd "$dir" && go test -race ./... -parallel 4)
+  (cd "$dir" && go test -race ./...)
 done
